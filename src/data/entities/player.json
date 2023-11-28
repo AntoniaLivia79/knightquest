@@ -1,0 +1,24 @@
+{
+  "entity_name": "player",
+  "entity_type": "pc",
+  "entity_image_vectors": [
+    [
+      {
+        "x": 0,
+        "y": 0
+      },
+      {
+        "x": 0,
+        "y": 0
+      }
+    ]
+  ],
+  "takeable": 0,
+  "entity_id": "none",
+  "skill": 0,
+  "stamina": 0,
+  "luck": 0,
+  "pos_x": 0,
+  "pos_y": 7,
+  "direction": 2
+}
