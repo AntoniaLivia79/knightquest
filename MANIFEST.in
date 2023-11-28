@@ -1,4 +1,4 @@
 include README.md
 include LICENSE.md
-recursive-include knightquest/data *
-recursive-include knightquest/assets *
+recursive-include src/data *
+recursive-include src/assets *
