@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from src.Model import Model
-from src.Control import Controller as Controller
-from src.View import View as View
+from Model import Model
+from Control import Controller as Controller
+from View import View as View
 
 
 def main():

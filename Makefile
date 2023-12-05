@@ -27,7 +27,7 @@ lint:
 
 # Run the project
 run:
-	cd src && python3 eldoria.py
+	cd src && python3 Knightquest.py
 
 # Clean up generated files
 clean:

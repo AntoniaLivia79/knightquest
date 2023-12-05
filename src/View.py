@@ -5,7 +5,7 @@ import pygame.surfarray as surfarray
 import numpy as np
 import os
 import json
-import src.Config as Config
+import Config as Config
 
 # The view displays the game interface on the screen. It does not alter the dungeon_map; it just
 # reads the data from the dungeon_map and decides what to display based upon the state of the
@@ -166,6 +166,7 @@ class View:
         player_view = compass[direction]
         blocked = False
         # draw walls based on player facing direction and coordinates
+        
         if dungeon_map[pos_y, pos_x, player_view[0]] == 1:
             self.draw_entity('wall_left_open', 'wall', 'left', self.gamescreen)
         else:
@@ -203,7 +204,6 @@ class View:
         surfarray.blit_array(screen, soften)
 
     def draw_entity(self, entity_name, entity_type, elevation, surface):
-
         # initialise entity vector point list
         self.vector_pnt_tuple_list = []
         # iterate through each file in the entities path
