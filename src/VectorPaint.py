@@ -1,5 +1,5 @@
 import pygame
-import src.Config as Config
+import Config as Config
 
 
 def main():
@@ -32,7 +32,10 @@ def main():
                 new_pos = is_close_to_any(event.pos, matrix)[1]
 
                 plot = True
-                lines.append(new_pos)
+                if lines == [(0,0)]:
+                    lines = [new_pos]
+                else:
+                    lines.append(new_pos)
             else:
                 if event.type == pygame.MOUSEBUTTONUP and plot:
                     plot = False
@@ -45,7 +48,8 @@ def main():
 
         for points in lines:
             if points != old_points and points[0] != 0:
-                pygame.draw.line(window, Config.entitypalette, old_points, points, 5)
+                if old_points != (0,0):
+                    pygame.draw.line(window, Config.entitypalette, old_points, points, 5)
                 old_points = points
 
         if draw and len(lines) > 1:
