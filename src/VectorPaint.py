@@ -16,7 +16,7 @@ def main():
     lines = []
     plot_position = (0, 0)
     source = (0, 0)
-    destination = (0, 0)
+
     drawing_state = False
     source_state = False
 
@@ -37,6 +37,10 @@ def main():
         for line in lines:
             pygame.draw.line(window, Config.entitypalette, line[0], line[1], 5)
 
+        # Draw a line if source exists but not drawing is not yet stored in lines list (function)
+        if source_state:
+            pygame.draw.line(window, Config.entitypalette, source, plot_position, 5)
+
         # Detect pygame event
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -47,21 +51,29 @@ def main():
             # Add a drawn line to the lines list (function)
             # Detect if clicked mouse, drawing line is in progress and near to a node
             if event.type == pygame.MOUSEBUTTONDOWN and is_close_to_any(plot_position, matrix)[0]:
-                if not drawing_state and not source_state:
-                    # A new line is now being drawn, change the drawing state
-                    drawing_state = True
-                    # Store the source coordinate which has just been plotted and change the source state
+                # On left mouse button click, begin drawing line or complete drawing line
+                if event.button == 1:
+                    if not drawing_state and not source_state:
+                        # A new line is now being drawn, change the drawing state
+                        drawing_state = True
+                        # Store the source coordinate which has just been plotted and change the source state
+                        source = is_close_to_any(plot_position, matrix)[1]
+                        source_state = True
+                    else:
+                        # Drawing a line is now complete, reset the drawing state
+                        drawing_state = False
+                        # Find the node closest to the mouse coordinate
+                        destination = is_close_to_any(plot_position, matrix)[1]
+                        # Store the source and destination coordinates of the drawn line
+                        lines.append([source, destination])
+                        # Reset the source and destination states
+                        source_state = False
+                # On right mouse button click, clear any drawn lines from the lines list that contain the clicked node
+                if event.button == 3:
                     source = is_close_to_any(plot_position, matrix)[1]
-                    source_state = True
-                else:
-                    # Drawing a line is now complete, reset the drawing state
-                    drawing_state = False
-                    # Find the node closest to the mouse coordinate
-                    destination = is_close_to_any(plot_position, matrix)[1]
-                    # Store the source and destination coordinates of the drawn line
-                    lines.append([source, destination])
-                    # Reset the source and destination states
-                    source_state = False
+                    for line in lines:
+                        if line[0] == source or line[1] == source:
+                            lines.remove(line)
 
             # Draw a line if source exists but not drawing is not yet stored in lines list (function)
             if source_state:
