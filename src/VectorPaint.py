@@ -17,6 +17,8 @@ def main():
     draw = False
     plot = False
 
+    #plot_pos = (0,0)
+
     matrix = [tuple([elem * 50 for elem in (x, y)]) for x in range(1, 11) for y in range(1, 11)]
     run = True
 
@@ -25,10 +27,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.MOUSEMOTION:
+            if hasattr(event, 'pos'):
                 plot_pos = event.pos
-                draw = True
+
             if event.type == pygame.MOUSEBUTTONDOWN and not plot and is_close_to_any(event.pos, matrix)[0]:
+                draw = True
                 new_pos = is_close_to_any(event.pos, matrix)[1]
 
                 plot = True
@@ -52,9 +55,8 @@ def main():
                     pygame.draw.line(window, Config.entitypalette, old_points, points, 5)
                 old_points = points
 
-        if draw and len(lines) > 1:
+        if draw:
             pygame.draw.line(window, Config.entitypalette, points, plot_pos, 5)
-            draw = False
 
         pygame.display.flip()
 
