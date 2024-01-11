@@ -29,6 +29,10 @@ lint:
 run:
 	cd src && python3 Knightquest.py
 
+# Launch the editing tool
+edit:
+	cd src && python3 EntityCreator.py
+
 # Clean up generated files
 clean:
 	@rm -rf __pycache__ .pytest_cache ./src/tests/.pytest_cache .coverage ./src/.coverage .tox
@@ -41,6 +45,10 @@ clean-venv:
 run-venv: venv
 	. venv/bin/activate && $(MAKE) run
 
+# Launch the editing tool within the virtual environment
+edit-venv: venv
+	. venv/bin/activate && $(MAKE) edit
+
 # Show this help message
 help:
 	@echo "Available targets:"
@@ -51,7 +59,9 @@ help:
 	@echo "  test-tox       Run tox automation for unit tests"
 	@echo "  lint           Run linting with flake8"
 	@echo "  run            Run the project"
+	@echo "  edit           Launch the editing tool"
 	@echo "  clean          Clean up generated files"
 	@echo "  clean-venv     Remove the virtual environment"
 	@echo "  run-venv       Run the project within the virtual environment"
+	@echo "  edit-venv      Launch editing tool within the virtual environment"
 	@echo "  help           Show this help message"
