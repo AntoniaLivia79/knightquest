@@ -86,8 +86,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
-            # mouse_pos = pygame.mouse.get_pos()
             # Add a drawn line to the lines list (function)
             # Detect if clicked mouse, drawing line is in progress and near to a node
             if event.type == pygame.MOUSEBUTTONDOWN:
