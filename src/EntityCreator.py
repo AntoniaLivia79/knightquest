@@ -8,11 +8,13 @@ def main():
         for c in coord_list:
             if abs(c[0] - coord[0]) <= tolerance and abs(c[1] - coord[1]) <= tolerance:
                 return [True, c]
-        return [False, (0,0)]
+        return [False, (0, 0)]
 
     def export_to_json(entityname='default'):
-        json_data = {"entity_name": entityname, "entity_image_vectors": [[{'x': int(src[0]/50) - 1, 'y': int(src[1]/50) - 1},
-                      {'x': int(dest[0]/50) - 1, 'y': int(dest[1]/50) - 1}] for src, dest in lines]}
+        json_data = {"entity_name": entityname,
+                     "entity_image_vectors": [[{'x': int(src[0] / 50) - 1, 'y': int(src[1] / 50) - 1},
+                                               {'x': int(dest[0] / 50) - 1, 'y': int(dest[1] / 50) - 1}] for src, dest
+                                              in lines]}
         filename = entityname + '.json'
         with open(filename, 'w') as json_file:
             json.dump(json_data, json_file, indent=2)
@@ -28,14 +30,12 @@ def main():
     button_border_colour = Config.itempalette
     color_active = pygame.Color('lightskyblue3')
     color_passive = pygame.Color('chartreuse4')
-    color = color_passive
 
     # Define font
     font = pygame.font.Font(None, 28)
 
     # Initialise parameters for drawing
     lines = []
-    plot_position = (0, 0)
     source = (0, 0)
     drawing_state = False
     source_state = False
@@ -87,12 +87,10 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            #mouse_pos = pygame.mouse.get_pos()
+            # mouse_pos = pygame.mouse.get_pos()
             # Add a drawn line to the lines list (function)
             # Detect if clicked mouse, drawing line is in progress and near to a node
             if event.type == pygame.MOUSEBUTTONDOWN:
-
-
                 if entity_name_input_rect.collidepoint(mouse_pos):
                     entity_name_input_active = True
                 else:
@@ -110,7 +108,8 @@ def main():
                                 if not drawing_state and not source_state:
                                     # A new line is now being drawn, change the drawing state
                                     drawing_state = True
-                                    # Store the source coordinate which has just been plotted and change the source state
+                                    # Store the source coordinate which has just been plotted
+                                    # and change the source state
                                     source = is_close_to_any(mouse_pos, matrix)[1]
                                     source_state = True
                                 else:
@@ -122,7 +121,8 @@ def main():
                                     lines.append([source, destination])
                                     # Reset the source and destination states
                                     source_state = False
-                            # On right mouse button click, clear any lines from the lines list containing the clicked node
+                            # On right mouse button click, clear any lines from the lines list
+                            # containing the clicked node
                             if event.button == 3:
                                 source = is_close_to_any(mouse_pos, matrix)[1]
                                 for line in lines:
