@@ -1,4 +1,4 @@
-.PHONY: test lint run
+.PHONY: test lint run edit clean clean-venv run-venv edit-venv
 
 # Set up virtual environment
 venv:
@@ -24,6 +24,10 @@ test-tox:
 # Run linting with flake8
 lint:
 	@flake8 src
+
+# Make nix shell
+nix-shell:
+	nix-shell
 
 # Run the project
 run:
@@ -58,6 +62,7 @@ help:
 	@echo "  test-coverage  Run unit tests with coverage"
 	@echo "  test-tox       Run tox automation for unit tests"
 	@echo "  lint           Run linting with flake8"
+	@echo "  nix-shell      Start nix shell environment and install dependencies"
 	@echo "  run            Run the project"
 	@echo "  edit           Launch the editing tool"
 	@echo "  clean          Clean up generated files"
