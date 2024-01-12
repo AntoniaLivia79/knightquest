@@ -23,8 +23,9 @@ def export_to_json(entityname, lines):
         json.dump(json_data, json_file, indent=2)
 
 
-def draw_interface(window, font, entity_name_text, entity_name_input_rect, color_active, color_passive):
-    global entity_name_input_active
+def draw_interface(window, font, entity_name_text, entity_name_input_rect, color_active, color_passive,
+                   entity_type_menu_rect, entity_type_options):
+    global entity_name_input_active, entity_type_menu_expanded, entity_type_selected_option
     window.fill((0, 0, 0))  # Fill screen with black
     pygame.draw.rect(window, color_active if entity_name_input_active else color_passive, entity_name_input_rect)
     text_surface = font.render(entity_name_text, True, (0, 0, 0))
@@ -35,6 +36,22 @@ def draw_interface(window, font, entity_name_text, entity_name_input_rect, color
     entity_name_text_label_rect = entity_name_text_label.get_rect()
     entity_name_text_label_rect.center = (600, 80)
     window.blit(entity_name_text_label, entity_name_text_label_rect)
+
+    # Draw drop-down menu
+    pygame.draw.rect(window, color_active if entity_type_menu_expanded else color_passive, entity_type_menu_rect)
+    pygame.draw.rect(window, (0, 255, 0), entity_type_menu_rect, 2)
+    menu_text = font.render(entity_type_selected_option, True, (0, 0, 255))
+    window.blit(menu_text, (entity_type_menu_rect.x + 10, entity_type_menu_rect.y + 10))
+
+    if entity_type_menu_expanded:
+        for i, option in enumerate(entity_type_options):
+            option_rect = pygame.Rect(entity_type_menu_rect.x,
+                                      entity_type_menu_rect.y + entity_type_menu_rect.height * (i + 1),
+                                      entity_type_menu_rect.width, entity_type_menu_rect.height)
+            pygame.draw.rect(window, (0, 0, 0), option_rect)
+            pygame.draw.rect(window, (0, 255, 0), option_rect, 2)
+            option_text = font.render(option, True, (0, 0, 255))
+            window.blit(option_text, (option_rect.x + 10, option_rect.y + 10))
 
 
 def draw_buttons(window, font, button_export, button_quit, button_colour, button_border_colour):
@@ -59,20 +76,37 @@ def draw_matrix_and_lines(window, matrix, lines, mouse_pos):
 
 
 def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
-                        entity_name_text, button_export, button_quit):
-    global entity_name_input_active
+                        entity_name_text, entity_type_menu_rect,
+                        entity_type_options, button_export, button_quit):
+    global entity_name_input_active, entity_type_menu_expanded, entity_type_selected_option
     if event.type == pygame.MOUSEBUTTONDOWN:
+
+        if entity_type_menu_rect.collidepoint(mouse_pos):
+            entity_type_menu_expanded = not entity_type_menu_expanded
+        elif entity_type_menu_expanded and not entity_type_menu_rect.collidepoint(event.pos):
+            entity_type_menu_expanded = False
+        elif entity_type_menu_expanded:
+            # Check if an option is clicked
+            for i, option in enumerate(entity_type_options):
+                option_rect = pygame.Rect(entity_type_menu_rect.x,
+                                          entity_type_menu_rect.y + entity_type_menu_rect.height * (i + 1),
+                                          entity_type_menu_rect.width, entity_type_menu_rect.height)
+                if option_rect.collidepoint(event.pos):
+                    entity_type_selected_option = option
+                    entity_type_menu_expanded = False
+
         if entity_name_input_rect.collidepoint(mouse_pos):
             entity_name_input_active = True
         else:
             entity_name_input_active = False
-            if button_export.collidepoint(mouse_pos):
-                export_to_json(entity_name_text, lines)
-            elif button_quit.collidepoint(mouse_pos):
-                return False
-            else:
-                if is_close_to_any(mouse_pos, matrix)[0]:
-                    handle_line_drawing(event, mouse_pos, matrix, lines)
+
+        if button_export.collidepoint(mouse_pos):
+            export_to_json(entity_name_text, lines)
+        elif button_quit.collidepoint(mouse_pos):
+            return False
+        else:
+            if is_close_to_any(mouse_pos, matrix)[0]:
+                handle_line_drawing(event, mouse_pos, matrix, lines)
 
     return True
 
@@ -118,7 +152,8 @@ def main():
     font = pygame.font.Font(None, 28)
 
     # Initialize parameters for drawing
-    global drawing_state, source_state, source, entity_name_input_active
+    global drawing_state, source_state, source, entity_name_input_active, entity_type_menu_expanded, \
+        entity_type_selected_option
     lines = []
     source = (0, 0)
     drawing_state = False
@@ -131,6 +166,12 @@ def main():
     entity_name_input_active = False
     entity_name_input_rect = pygame.Rect(550, 100, 140, 32)
 
+    # Initialize parameters for entity type input
+    entity_type_options = ['mob', 'item']
+    entity_type_selected_option = entity_type_options[0]
+    entity_type_menu_rect = pygame.Rect(550, 140, 140, 32 )
+    entity_type_menu_expanded = False
+
     button_export = pygame.Rect(5, 5, 150, 40)
     button_quit = pygame.Rect(200, 5, 70, 40)
 
@@ -139,7 +180,8 @@ def main():
         mouse_pos = pygame.mouse.get_pos()
 
         draw_interface(window, font, entity_name_text, entity_name_input_rect,
-                       color_active, color_passive)
+                       color_active, color_passive, entity_type_menu_rect,
+                       entity_type_options)
         draw_buttons(window, font, button_export, button_quit, button_colour, button_border_colour)
         draw_matrix_and_lines(window, matrix, lines, mouse_pos)
 
@@ -153,7 +195,8 @@ def main():
                     entity_name_text += event.unicode
 
             run = handle_mouse_events(event, mouse_pos, matrix, lines,
-                                      entity_name_input_rect, entity_name_text, button_export, button_quit)
+                                      entity_name_input_rect, entity_name_text,
+                                      button_export, entity_type_options, button_export, button_quit)
 
         pygame.display.flip()
 
