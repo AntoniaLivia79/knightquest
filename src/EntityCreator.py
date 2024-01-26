@@ -80,7 +80,6 @@ def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
                         entity_type_options, button_export, button_quit):
     global entity_name_input_active, entity_type_menu_expanded, entity_type_selected_option
     if event.type == pygame.MOUSEBUTTONDOWN:
-
         if entity_type_menu_rect.collidepoint(mouse_pos):
             entity_type_menu_expanded = not entity_type_menu_expanded
         elif entity_type_menu_expanded and not entity_type_menu_rect.collidepoint(event.pos):
@@ -124,7 +123,12 @@ def handle_line_drawing(event, mouse_pos, matrix, lines):
             lines.append([source, destination])
             source_state = False
     elif event.button == 3:
-        handle_line_removal(mouse_pos, lines)
+        handle_line_removal(mouse_pos, lines, matrix)
+    elif event.button == 2:
+        handle_line_removal(mouse_pos, lines, matrix)
+        drawing_state = False
+        source_state = False
+        source = (0, 0)
 
 
 def handle_line_removal(mouse_pos, lines, matrix):
@@ -169,7 +173,7 @@ def main():
     # Initialize parameters for entity type input
     entity_type_options = ['mob', 'item']
     entity_type_selected_option = entity_type_options[0]
-    entity_type_menu_rect = pygame.Rect(550, 140, 140, 32 )
+    entity_type_menu_rect = pygame.Rect(550, 140, 140, 32)
     entity_type_menu_expanded = False
 
     button_export = pygame.Rect(5, 5, 150, 40)
@@ -196,7 +200,7 @@ def main():
 
             run = handle_mouse_events(event, mouse_pos, matrix, lines,
                                       entity_name_input_rect, entity_name_text,
-                                      button_export, entity_type_options, button_export, button_quit)
+                                      entity_type_menu_rect, entity_type_options, button_export, button_quit)
 
         pygame.display.flip()
 
