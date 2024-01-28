@@ -10,9 +10,10 @@ def is_close_to_any(coord, coord_list, tolerance=5):
     return [False, (0, 0)]
 
 
-def export_to_json(entityname, lines):
+def export_to_json(entityname, entitytype, lines):
     json_data = {
         "entity_name": entityname,
+        "entity_type": entitytype,
         "entity_image_vectors": [
             [{'x': int(src[0] / 50) - 1, 'y': int(src[1] / 50) - 1},
              {'x': int(dest[0] / 50) - 1, 'y': int(dest[1] / 50) - 1}] for src, dest in lines
@@ -82,16 +83,18 @@ def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
     if event.type == pygame.MOUSEBUTTONDOWN:
         if entity_type_menu_rect.collidepoint(mouse_pos):
             entity_type_menu_expanded = not entity_type_menu_expanded
-        elif entity_type_menu_expanded and not entity_type_menu_rect.collidepoint(event.pos):
-            entity_type_menu_expanded = False
+
+        #elif entity_type_menu_rect.collidepoint(mouse_pos):
+        #    entity_type_menu_expanded = False
+
         elif entity_type_menu_expanded:
-            # Check if an option is clicked
             for i, option in enumerate(entity_type_options):
                 option_rect = pygame.Rect(entity_type_menu_rect.x,
                                           entity_type_menu_rect.y + entity_type_menu_rect.height * (i + 1),
                                           entity_type_menu_rect.width, entity_type_menu_rect.height)
-                if option_rect.collidepoint(event.pos):
+                if option_rect.collidepoint(mouse_pos):
                     entity_type_selected_option = option
+                    print(entity_type_selected_option)
                     entity_type_menu_expanded = False
 
         if entity_name_input_rect.collidepoint(mouse_pos):
@@ -100,7 +103,7 @@ def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
             entity_name_input_active = False
 
         if button_export.collidepoint(mouse_pos):
-            export_to_json(entity_name_text, lines)
+            export_to_json(entity_name_text, entity_type_selected_option, lines)
         elif button_quit.collidepoint(mouse_pos):
             return False
         else:
