@@ -10,14 +10,23 @@ def is_close_to_any(coord, coord_list, tolerance=5):
     return [False, (0, 0)]
 
 
-def export_to_json(entityname, entitytype, lines):
+def export_to_json(entityname, entitytype, takeable, skill, stamina, luck,
+                   lines):
     json_data = {
         "entity_name": entityname,
         "entity_type": entitytype,
         "entity_image_vectors": [
             [{'x': int(src[0] / 50) - 1, 'y': int(src[1] / 50) - 1},
              {'x': int(dest[0] / 50) - 1, 'y': int(dest[1] / 50) - 1}] for src, dest in lines
-        ]
+        ],
+        "entity_id": "none",
+        "takeable": takeable,
+        "skill": int(skill),
+        "stamina": int(stamina),
+        "luck": int(luck),
+        "pos_x": 0,
+        "pos_y": 0,
+        "direction": 2
     }
     filename = entityname + '.json'
     with open(filename, 'w') as json_file:
@@ -26,8 +35,8 @@ def export_to_json(entityname, entitytype, lines):
 
 def draw_interface(window, font, entity_name_text, entity_name_input_rect, color_active, color_passive,
                    entity_type_menu_rect, entity_type_options, takeable_menu_rect, takeable_options,
-                   skill_input_rect, skill_test, stamina_input_rect, stamina_test,
-                   luck_input_rect, luck_test):
+                   skill_input_rect, skill_text, stamina_input_rect, stamina_text,
+                   luck_input_rect, luck_text):
 
     global entity_name_input_active, entity_type_menu_expanded, entity_type_selected_option, \
         takeable_menu_expanded, takeable_selected_option, skill_input_active, stamina_input_active, luck_input_active
@@ -40,17 +49,17 @@ def draw_interface(window, font, entity_name_text, entity_name_input_rect, color
     entity_name_input_rect.w = max(100, text_surface.get_width() + 10)
 
     pygame.draw.rect(window, color_active if skill_input_active else color_passive, skill_input_rect)    
-    text_surface = font.render(skill_test, True, (0, 0, 0))
+    text_surface = font.render(skill_text, True, (0, 0, 0))
     window.blit(text_surface, (skill_input_rect.x + 5, skill_input_rect.y + 5))
     skill_input_rect.w = max(100, text_surface.get_width() + 10)
             
     pygame.draw.rect(window, color_active if stamina_input_active else color_passive, stamina_input_rect)
-    text_surface = font.render(stamina_test, True, (0, 0, 0))
+    text_surface = font.render(stamina_text, True, (0, 0, 0))
     window.blit(text_surface, (stamina_input_rect.x + 5, stamina_input_rect.y + 5))
     stamina_input_rect.w = max(100, text_surface.get_width() + 10)
 
     pygame.draw.rect(window, color_active if luck_input_active else color_passive, luck_input_rect)
-    text_surface = font.render(luck_test, True, (0, 0, 0))
+    text_surface = font.render(luck_text, True, (0, 0, 0))
     window.blit(text_surface, (luck_input_rect.x + 5, luck_input_rect.y + 5))
     luck_input_rect.w = max(100, text_surface.get_width() + 10)
 
@@ -145,7 +154,8 @@ def draw_matrix_and_lines(window, matrix, lines, mouse_pos):
 
 def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
                         entity_name_text, entity_type_menu_rect,
-                        entity_type_options, button_export, button_quit):
+                        entity_type_options, button_export, button_quit, skill_input_rect,
+                        stamina_input_rect, luck_input_rect, takeable_menu_rect, takeable_options, skill_text, stamina_text, luck_text):
     
     global entity_name_input_active, entity_type_menu_expanded, entity_type_selected_option, \
         takeable_menu_expanded, takeable_selected_option, skill_input_active, stamina_input_active, luck_input_active
@@ -160,7 +170,6 @@ def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
                                           entity_type_menu_rect.width, entity_type_menu_rect.height)
                 if option_rect.collidepoint(mouse_pos):
                     entity_type_selected_option = option
-                    print(entity_type_selected_option)
                     entity_type_menu_expanded = False
 
         if takeable_menu_rect.collidepoint(mouse_pos):
@@ -172,7 +181,6 @@ def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
                                           takeable_menu_rect.width, takeable_menu_rect.height)
                 if option_rect.collidepoint(mouse_pos):
                     takeable_selected_option = option
-                    print(takeable_selected_option)
                     takeable_menu_expanded = False
 
         if entity_name_input_rect.collidepoint(mouse_pos):
@@ -196,7 +204,8 @@ def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
             luck_input_active = False
 
         if button_export.collidepoint(mouse_pos):
-            export_to_json(entity_name_text, entity_type_selected_option, lines)
+            export_to_json(entity_name_text, entity_type_selected_option, takeable_selected_option, skill_text, stamina_text, luck_text,
+                           lines)
         elif button_quit.collidepoint(mouse_pos):
             return False
         else:
@@ -253,7 +262,9 @@ def main():
 
     # Initialize parameters for drawing
     global drawing_state, source_state, source, entity_name_input_active, entity_type_menu_expanded, \
-        entity_type_selected_option
+        entity_type_selected_option, takeable_menu_expanded, takeable_selected_option, \
+        skill_input_active, stamina_input_active, luck_input_active
+
     lines = []
     source = (0, 0)
     drawing_state = False
@@ -279,17 +290,17 @@ def main():
     takeable_menu_expanded = False
 
     # Initialize parameters for skill input
-    skill_test = ''
+    skill_text = ''
     skill_input_active = False
     skill_input_rect = pygame.Rect(550, 304, 140, 32)
 
     # Initialize parameters for stamina input
-    stamina_test = ''
+    stamina_text = ''
     stamina_input_active = False
     stamina_input_rect = pygame.Rect(550, 384, 140, 32)
 
     # Initialize parameters for luck input
-    luck_test = ''
+    luck_text = ''
     luck_input_active = False
     luck_input_rect = pygame.Rect(550, 464, 140, 32)
     
@@ -304,8 +315,8 @@ def main():
         draw_interface(window, font, entity_name_text, entity_name_input_rect,
                        color_active, color_passive, entity_type_menu_rect,
                        entity_type_options, takeable_menu_rect, takeable_options,
-                       skill_input_rect, skill_test, stamina_input_rect, stamina_test,
-                       luck_input_rect, luck_test)
+                       skill_input_rect, skill_text, stamina_input_rect, stamina_text,
+                       luck_input_rect, luck_text)
         draw_buttons(window, font, button_export, button_quit, button_colour, button_border_colour)
         draw_matrix_and_lines(window, matrix, lines, mouse_pos)
 
@@ -313,14 +324,39 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_BACKSPACE:
-                    entity_name_text = entity_name_text[:-1]
-                else:
-                    entity_name_text += event.unicode
+                # Handle entity name input
+                if entity_name_input_active:
+                    if event.key == pygame.K_BACKSPACE:
+                        entity_name_text = entity_name_text[:-1]
+                    else:
+                        entity_name_text += event.unicode
+
+                # Handle skill input
+                if skill_input_active:
+                    if event.key == pygame.K_BACKSPACE:
+                        skill_text = skill_text[:-1]
+                    else:
+                        skill_text += event.unicode
+
+                # Handle stamina input
+                if stamina_input_active:
+                    if event.key == pygame.K_BACKSPACE:
+                        stamina_text = stamina_text[:-1]
+                    else:
+                        stamina_text += event.unicode
+
+                # Handle luck input
+                if luck_input_active:
+                    if event.key == pygame.K_BACKSPACE:
+                        luck_text = luck_text[:-1]
+                    else:
+                        luck_text += event.unicode
 
             run = handle_mouse_events(event, mouse_pos, matrix, lines,
                                       entity_name_input_rect, entity_name_text,
-                                      entity_type_menu_rect, entity_type_options, button_export, button_quit)
+                                      entity_type_menu_rect, entity_type_options,
+                                      button_export, button_quit, skill_input_rect,
+                                      stamina_input_rect, luck_input_rect, takeable_menu_rect, takeable_options, skill_text, stamina_text, luck_text)
 
         pygame.display.flip()
 
