@@ -73,7 +73,7 @@
       }
     ]    
   ],
-  "takeable": 1,
+  "takeable": "false",
   "entity_id": "none",
   "skill": 0,
   "stamina": 0,

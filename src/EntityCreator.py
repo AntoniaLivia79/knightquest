@@ -1,6 +1,7 @@
 import pygame
 import json
 import Config as Config
+import sys
 
 
 def is_close_to_any(coord, coord_list, tolerance=5):
@@ -9,6 +10,17 @@ def is_close_to_any(coord, coord_list, tolerance=5):
             return [True, c]
     return [False, (0, 0)]
 
+def import_from_json(entity_file_path):
+    try:
+        with open(entity_file_path, 'r') as json_file:
+            json_data = json.load(json_file)
+            return json_data
+    except FileNotFoundError:
+        print(f"Error: File not found at '{entity_file_path}'")
+        sys.exit(1)
+    except json.decoder.JSONDecodeError:
+        print(f"Error: File at '{entity_file_path}' is not a valid JSON file")
+        sys.exit(1)  
 
 def export_to_json(entityname, entitytype, takeable, skill, stamina, luck,
                    lines):
@@ -307,6 +319,19 @@ def main():
     # Initialize parameters for buttons
     button_export = pygame.Rect(5, 5, 150, 40)
     button_quit = pygame.Rect(200, 5, 70, 40)
+
+    # Check if a Entity JSON file name was passed as an argument
+    if len(sys.argv) == 2:
+        entity_file_path = sys.argv[1]
+        entity_json_data = import_from_json(entity_file_path)
+        entity_name_text = entity_json_data['entity_name']
+        entity_type_selected_option = entity_json_data['entity_type']
+        takeable_selected_option = entity_json_data['takeable']
+        skill_text = str(entity_json_data['skill'])
+        stamina_text = str(entity_json_data['stamina'])
+        luck_text = str(entity_json_data['luck'])
+        lines = [[tuple([elem * 50 for elem in (x['x'] + 1, x['y'] + 1)]),
+                  tuple([elem * 50 for elem in (y['x'] + 1, y['y'] + 1)])] for x, y in entity_json_data['entity_image_vectors']]
 
     while run:
         clock.tick(60)
