@@ -58,57 +58,57 @@ def draw_interface(window, font, entity_name_text, entity_name_input_rect, color
     pygame.draw.rect(window, color_active if entity_name_input_active else color_passive, entity_name_input_rect)
     text_surface = font.render(entity_name_text, True, (0, 0, 0))
     window.blit(text_surface, (entity_name_input_rect.x + 5, entity_name_input_rect.y + 5))
-    entity_name_input_rect.w = max(100, text_surface.get_width() + 10)
+    entity_name_input_rect.w = max(140, text_surface.get_width() + 10)
 
     pygame.draw.rect(window, color_active if skill_input_active else color_passive, skill_input_rect)    
     text_surface = font.render(skill_text, True, (0, 0, 0))
     window.blit(text_surface, (skill_input_rect.x + 5, skill_input_rect.y + 5))
-    skill_input_rect.w = max(100, text_surface.get_width() + 10)
+    skill_input_rect.w = max(140, text_surface.get_width() + 10)
             
     pygame.draw.rect(window, color_active if stamina_input_active else color_passive, stamina_input_rect)
     text_surface = font.render(stamina_text, True, (0, 0, 0))
     window.blit(text_surface, (stamina_input_rect.x + 5, stamina_input_rect.y + 5))
-    stamina_input_rect.w = max(100, text_surface.get_width() + 10)
+    stamina_input_rect.w = max(140, text_surface.get_width() + 10)
 
     pygame.draw.rect(window, color_active if luck_input_active else color_passive, luck_input_rect)
     text_surface = font.render(luck_text, True, (0, 0, 0))
     window.blit(text_surface, (luck_input_rect.x + 5, luck_input_rect.y + 5))
-    luck_input_rect.w = max(100, text_surface.get_width() + 10)
+    luck_input_rect.w = max(140, text_surface.get_width() + 10)
 
     entity_name_text_label = font.render('Entity Name:', True, (0, 0, 255), (0, 0, 0))
     entity_name_text_label_rect = entity_name_text_label.get_rect()
     entity_name_text_label_rect.x = 550
-    entity_name_text_label_rect.y = 80
+    entity_name_text_label_rect.y = 33
     window.blit(entity_name_text_label, entity_name_text_label_rect)
 
     entity_type_text_label = font.render('Entity Type:', True, (0, 0, 255), (0, 0, 0))
     entity_type_text_label_rect = entity_type_text_label.get_rect()
     entity_type_text_label_rect.x = 550
-    entity_type_text_label_rect.y = 140
+    entity_type_text_label_rect.y = 115
     window.blit(entity_type_text_label, entity_type_text_label_rect)
 
     takeable_text_label = font.render('Takeable:', True, (0, 0, 255), (0, 0, 0))
     takeable_text_label_rect = takeable_text_label.get_rect()
     takeable_text_label_rect.x = 550
-    takeable_text_label_rect.y = 200
+    takeable_text_label_rect.y = 240
     window.blit(takeable_text_label, takeable_text_label_rect)
 
     skill_text_label = font.render('Skill:', True, (0, 0, 255), (0, 0, 0))
     skill_text_label_rect = skill_text_label.get_rect()
     skill_text_label_rect.x = 550
-    skill_text_label_rect.y = 280
+    skill_text_label_rect.y = 320
     window.blit(skill_text_label, skill_text_label_rect)
 
     stamina_text_label = font.render('Stamina:', True, (0, 0, 255), (0, 0, 0))
     stamina_text_label_rect = stamina_text_label.get_rect()
     stamina_text_label_rect.x = 550
-    stamina_text_label_rect.y = 360
+    stamina_text_label_rect.y = 400
     window.blit(stamina_text_label, stamina_text_label_rect)
 
     Luck_text_label = font.render('Luck:', True, (0, 0, 255), (0, 0, 0))
     Luck_text_label_rect = Luck_text_label.get_rect()
     Luck_text_label_rect.x = 550
-    Luck_text_label_rect.y = 440
+    Luck_text_label_rect.y = 480
     window.blit(Luck_text_label, Luck_text_label_rect)
 
     # Draw entity type drop-down menu
@@ -258,7 +258,7 @@ def handle_line_removal(mouse_pos, lines, matrix):
 
 def main():
     pygame.init()
-    window = pygame.display.set_mode((860, 600))
+    window = pygame.display.set_mode((705, 550))
     pygame.display.set_caption('Entity Creator')
     clock = pygame.time.Clock()
 
@@ -287,38 +287,38 @@ def main():
     # Initialize parameters for entity name input
     entity_name_text = ''
     entity_name_input_active = False
-    entity_name_input_rect = pygame.Rect(550, 104, 140, 32)
+    entity_name_input_rect = pygame.Rect(550, 57, 220, 32)
 
     # Initialize parameters for entity type input
     entity_type_options = ['mob', 'item']
     entity_type_selected_option = entity_type_options[0]
-    entity_type_menu_rect = pygame.Rect(550, 164, 140, 32)
+    entity_type_menu_rect = pygame.Rect(550, 139, 140, 32)
     entity_type_menu_expanded = False
 
     # Initialize parameters for takeable input
     takeable_options = ['true', 'false']
     takeable_selected_option = takeable_options[0]
-    takeable_menu_rect = pygame.Rect(550, 224, 140, 32)
+    takeable_menu_rect = pygame.Rect(550, 264, 140, 32)
     takeable_menu_expanded = False
 
     # Initialize parameters for skill input
     skill_text = ''
     skill_input_active = False
-    skill_input_rect = pygame.Rect(550, 304, 140, 32)
+    skill_input_rect = pygame.Rect(550, 344, 140, 32)
 
     # Initialize parameters for stamina input
     stamina_text = ''
     stamina_input_active = False
-    stamina_input_rect = pygame.Rect(550, 384, 140, 32)
+    stamina_input_rect = pygame.Rect(550, 424, 140, 32)
 
     # Initialize parameters for luck input
     luck_text = ''
     luck_input_active = False
-    luck_input_rect = pygame.Rect(550, 464, 140, 32)
+    luck_input_rect = pygame.Rect(550, 504, 140, 32)
     
     # Initialize parameters for buttons
-    button_export = pygame.Rect(5, 5, 150, 40)
-    button_quit = pygame.Rect(200, 5, 70, 40)
+    button_export = pygame.Rect(40, 5, 155, 28)
+    button_quit = pygame.Rect(458, 5, 50, 28)
 
     # Check if a Entity JSON file name was passed as an argument
     if len(sys.argv) == 2:
