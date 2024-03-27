@@ -1,3 +1,17 @@
 venv/
 src/__pycache__
 .idea/
+dist/
+build/
+poetry.lock
+*.egg-info/
+*.egg/
+*.egg-info
+*.egg
+*.pyc
+*.pyo
+*.pyd
+*.pyz
+*.pyw
+:w
+

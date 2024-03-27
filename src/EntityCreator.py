@@ -318,7 +318,7 @@ def main():
     
     # Initialize parameters for buttons
     button_export = pygame.Rect(40, 5, 155, 28)
-    button_quit = pygame.Rect(458, 5, 50, 28)
+    button_quit = pygame.Rect(640, 5, 50, 28)
 
     # Check if a Entity JSON file name was passed as an argument
     if len(sys.argv) == 2:
