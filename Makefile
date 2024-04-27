@@ -35,7 +35,7 @@ run:
 
 # Launch the editing tool
 edit:
-	cd src && python3 EntityCreator.py
+	cd src && cd data && cd entities && python3 EntityEditor.py
 
 # Clean up generated files
 clean:

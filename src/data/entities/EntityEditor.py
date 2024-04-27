@@ -1,8 +1,7 @@
 import pygame
 import json
-import Config as Config
 import sys
-
+from maison import ProjectConfig
 
 def is_close_to_any(coord, coord_list, tolerance=5):
     for c in coord_list:
@@ -153,15 +152,15 @@ def draw_buttons(window, font, button_export, button_quit, button_colour, button
     window.blit(button_text, (button_quit.x + 5, button_quit.y + 5))
 
 
-def draw_matrix_and_lines(window, matrix, lines, mouse_pos):
+def draw_matrix_and_lines(window, matrix, lines, mouse_pos, config):
     for node in matrix:
-        pygame.draw.circle(window, Config.itempalette, node, 5)
+        pygame.draw.circle(window, tuple(config.get_option("itempalette")), node, 5)
 
     for line in lines:
-        pygame.draw.line(window, Config.entitypalette, line[0], line[1], 5)
+        pygame.draw.line(window, tuple(config.get_option("entitypalette")), line[0], line[1], 5)
 
     if source_state:
-        pygame.draw.line(window, Config.entitypalette, source, mouse_pos, 5)
+        pygame.draw.line(window, tuple(config.get_option("entitypalette")), source, mouse_pos, 5)
 
 
 def handle_mouse_events(event, mouse_pos, matrix, lines, entity_name_input_rect,
@@ -262,10 +261,12 @@ def main():
     pygame.display.set_caption('Entity Creator')
     clock = pygame.time.Clock()
 
+    config = ProjectConfig(project_name="knightquest")
+
     # Define colors
     black = (0, 0, 0)
-    button_colour = Config.entitypalette
-    button_border_colour = Config.itempalette
+    button_colour = tuple(config.get_option("entitypalette"))
+    button_border_colour = tuple(config.get_option("itempalette"))
     color_active = pygame.Color('lightskyblue3')
     color_passive = pygame.Color('chartreuse4')
 
@@ -343,7 +344,7 @@ def main():
                        skill_input_rect, skill_text, stamina_input_rect, stamina_text,
                        luck_input_rect, luck_text)
         draw_buttons(window, font, button_export, button_quit, button_colour, button_border_colour)
-        draw_matrix_and_lines(window, matrix, lines, mouse_pos)
+        draw_matrix_and_lines(window, matrix, lines, mouse_pos, config)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
