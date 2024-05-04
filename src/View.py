@@ -5,7 +5,7 @@ import pygame.surfarray as surfarray
 import numpy as np
 import os
 import json
-import Config as Config
+from maison import ProjectConfig
 
 # The view displays the game interface on the screen. It does not alter the dungeon_map; it just
 # reads the data from the dungeon_map and decides what to display based upon the state of the
@@ -18,52 +18,60 @@ class View:
     # 'self' is required by Python and refers to the object being created.
     def __init__(self):
 
-        # configure font
-        self.font_size = Config.font_size * Config.hud_scale
-        # configure text
-        self.text_indent = Config.text_indent * Config.hud_scale
-        self.text_intro_header_indent = Config.text_intro_header_indent * Config.hud_scale
-        self.text_intro_footer_indent = Config.text_intro_footer_indent * Config.hud_scale
-        self.text_end_header_indent = Config.text_end_header_indent * Config.hud_scale
-        self.text_end_footer_indent = Config.text_end_footer_indent * Config.hud_scale
-        self.text_stats_header_indent = Config.text_stats_header_indent * Config.hud_scale
-        self.text_entity_footer_indent = Config.text_entity_footer_indent * Config.hud_scale
-        self.text_option_indent = Config.text_option_indent * Config.hud_scale
-        # configure menu
-        self.cursor_width = Config.cursor_width * Config.hud_scale
-        self.cursor_height = Config.cursor_height * Config.hud_scale
-        self.cursor_radius = Config.cursor_radius * Config.hud_scale
-        # configure display
-        self.display_width = Config.display_width * Config.hud_scale
-        self.display_height = Config.display_height * Config.hud_scale
-        # configure palette
-        self.gamepalette = Config.gamepalette
-        self.uipalette = Config.uipalette
-        self.entitypalette = Config.entitypalette
-        self.mobpalette = Config.mobpalette
-        self.itempalette = Config.itempalette
-        # configure hud
-        self.front_entity_width = Config.front_entity_width * Config.hud_scale
-        self.front_entity_height = Config.front_entity_height * Config.hud_scale
-        self.left_entity_width = Config.left_entity_width * Config.hud_scale
-        self.left_entity_height = Config.left_entity_height * Config.hud_scale
-        self.right_entity_width = Config.right_entity_width * Config.hud_scale
-        self.right_entity_height = Config.right_entity_height * Config.hud_scale
-        self.text_header_height = Config.text_header_height * Config.hud_scale
-        self.text_footer_height = Config.text_footer_height * Config.hud_scale
-        self.text_option_height = Config.text_option_height * Config.hud_scale
-        self.cursor_width = Config.cursor_width * Config.hud_scale
-        self.cursor_radius = Config.cursor_radius * Config.hud_scale
-        self.vector_scale = Config.vector_scale * Config.hud_scale
-        self.map_width = Config.map_width * Config.hud_scale
-        self.map_height = Config.map_height * Config.hud_scale
-        self.compass_width = Config.compass_width * Config.hud_scale
-        self.compass_height = Config.compass_height * Config.hud_scale
-        self.compass_bearing_list = Config.compass_bearing_list * Config.hud_scale
-        self.left_dice_width = Config.left_dice_width * Config.hud_scale
-        self.right_dice_width = Config.right_dice_width * Config.hud_scale
-        self.player_dice_height = Config.player_dice_height * Config.hud_scale
-        self.mob_dice_height = Config.mob_dice_height * Config.hud_scale
+        # load configuration    
+        config = ProjectConfig(project_name="knightquest")
+        # load scale config
+        self.hud_scale = config.get_option("hud_scale")
+        # load font config
+        self.font_size = config.get_option("font_size") * self.hud_scale
+        # load text config
+        self.text_indent = config.get_option("text_indent") * self.hud_scale
+        self.text_intro_header_indent = config.get_option("text_intro_header_indent") * self.hud_scale
+        self.text_intro_footer_indent = config.get_option("text_intro_footer_indent") * self.hud_scale
+        self.text_end_header_indent = config.get_option("text_end_header_indent") * self.hud_scale
+        self.text_end_footer_indent = config.get_option("text_end_footer_indent") * self.hud_scale
+        self.text_stats_header_indent = config.get_option("text_stats_header_indent") * self.hud_scale
+        self.text_entity_footer_indent = config.get_option("text_entity_footer_indent") * self.hud_scale
+        self.text_option_indent = config.get_option("text_option_indent") * self.hud_scale
+        # load menu config
+        self.cursor_width = config.get_option("cursor_width") * self.hud_scale
+        self.cursor_height = config.get_option("cursor_height") * self.hud_scale
+        self.cursor_radius = config.get_option("cursor_radius") * self.hud_scale
+        # load display config
+        self.display_width = config.get_option("display_width") * self.hud_scale
+        self.display_height = config.get_option("display_height") * self.hud_scale
+        # load palette config
+        self.gamepalette = config.get_option("gamepalette")
+        self.uipalette = config.get_option("uipalette")
+        self.entitypalette = config.get_option("entitypalette")
+        self.mobpalette = config.get_option("mobpalette")
+        self.itempalette = config.get_option("itempalette")
+        # load hud config
+        self.front_entity_width = config.get_option("front_entity_width") * self.hud_scale
+        self.front_entity_height = config.get_option("front_entity_height") * self.hud_scale
+        self.left_entity_width = config.get_option("left_entity_width") * self.hud_scale
+        self.left_entity_height = config.get_option("left_entity_height") * self.hud_scale
+        self.right_entity_width = config.get_option("right_entity_width") * self.hud_scale
+        self.right_entity_height = config.get_option("right_entity_height") * self.hud_scale
+        self.text_header_height = config.get_option("text_header_height") * self.hud_scale
+        self.text_footer_height = config.get_option("text_footer_height") * self.hud_scale
+        self.text_option_height = config.get_option("text_option_height") * self.hud_scale
+        self.cursor_width = config.get_option("cursor_width") * self.hud_scale
+        self.cursor_radius = config.get_option("cursor_radius") * self.hud_scale
+        self.vector_scale = config.get_option("vector_scale") * self.hud_scale
+        self.map_width = config.get_option("map_width") * self.hud_scale
+        self.map_height = config.get_option("map_height") * self.hud_scale
+        self.compass_width = config.get_option("compass_width") * self.hud_scale
+        self.compass_height = config.get_option("compass_height") * self.hud_scale
+        compass_bearings = [{'width_offset': -30, 'height_offset': -7, 'angle': 90},
+                            {'width_offset': -7, 'height_offset': -35, 'angle': 0},
+                            {'width_offset': 0, 'height_offset': -7, 'angle': 270},
+                            {'width_offset': -7, 'height_offset': -7, 'angle': 180}]
+        self.compass_bearing_list = compass_bearings * self.hud_scale
+        self.left_dice_width = config.get_option("left_dice_width") * self.hud_scale
+        self.right_dice_width = config.get_option("right_dice_width") * self.hud_scale
+        self.player_dice_height = config.get_option("player_dice_height") * self.hud_scale
+        self.mob_dice_height = config.get_option("mob_dice_height") * self.hud_scale
         # initialise pygame instance
         pygame.init()
         self.clock = pygame.time.Clock()
@@ -263,19 +271,19 @@ class View:
 
     # draw map on left of game screen of player
     def draw_map(self, pos_x, pos_y, dungeon_map, model):
-        player_pos_x = (pos_x * (Config.hud_scale * 8)) + self.map_width
-        player_pos_y = (pos_y * (Config.hud_scale * 8)) + self.map_height
+        player_pos_x = (pos_x * (self.hud_scale * 8)) + self.map_width
+        player_pos_y = (pos_y * (self.hud_scale * 8)) + self.map_height
         # draw all visited dungeon cells
         for pos_x in range(0, model.max_x):
             for pos_y in range(0, model.max_y):
-                map_pos_x = (pos_x * (Config.hud_scale * 8)) + self.map_width
-                map_pos_y = (pos_y * (Config.hud_scale * 8)) + self.map_height
+                map_pos_x = (pos_x * (self.hud_scale * 8)) + self.map_width
+                map_pos_y = (pos_y * (self.hud_scale * 8)) + self.map_height
                 if dungeon_map[pos_y, pos_x, 4] == 1:
                     pygame.draw.rect(self.gamescreen, self.uipalette,
-                                     (map_pos_x + 1, map_pos_y + 1, (Config.hud_scale * 4), (Config.hud_scale * 4)))
+                                     (map_pos_x + 1, map_pos_y + 1, (self.hud_scale * 4), (self.hud_scale * 4)))
         # draw player
         pygame.draw.rect(self.gamescreen, self.gamepalette,
-                                     (player_pos_x + 1, player_pos_y + 1, (Config.hud_scale * 4), (Config.hud_scale * 4)))
+                                     (player_pos_x + 1, player_pos_y + 1, (self.hud_scale * 4), (self.hud_scale * 4)))
 
     # draw cursor on menu_screen
     def draw_cursor(self, option_height):
@@ -283,7 +291,7 @@ class View:
         pygame.draw.circle(self.gamescreen,
                            self.uipalette,
                            (self.cursor_width, self.cursor_height
-                            + (int(option_height - 1) * (self.font_size + Config.hud_scale)) + (self.font_size / 2) + self.cursor_radius),
+                            + (int(option_height - 1) * (self.font_size + self.hud_scale)) + (self.font_size / 2) + self.cursor_radius),
                            self.cursor_radius,
                            0)
 

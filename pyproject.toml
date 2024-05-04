@@ -60,7 +60,7 @@ readme = "README.md"
 python = "3.11.6"
 pygame = "^2.5.2"
 numpy = "^1.26.4"
-
+maison = "^1.4.1"
 
 [build-system]
 requires = ["poetry-core"]
